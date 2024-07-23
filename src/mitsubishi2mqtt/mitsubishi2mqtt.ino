@@ -192,7 +192,7 @@ void setup() {
     // Allow Remote/Panel
     hp.enableExternalUpdate();
     hp.enableAutoUpdate();
-    hpSerial.begin(2400, SERIAL_8N1, 26, 32); // Baud rate: 9600, Mode: 8N1, RX: GPIO 26, TX: GPIO 32
+    hpSerial.begin(2400, SERIAL_8E1, 26, 32); // Baud rate: 2400, Mode: 8E1, RX: GPIO 26, TX: GPIO 32
     hp.connect(&hpSerial);
     // hp.connect(&Serial);
     heatpumpStatus currentStatus = hp.getStatus();
