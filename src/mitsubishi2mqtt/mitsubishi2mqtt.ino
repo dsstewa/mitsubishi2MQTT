@@ -13,7 +13,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
+#include <M5Atom.h>
 #include "FS.h"               // SPIFFS for store config
 #ifdef ESP32
 #include <WiFi.h>             // WIFI for ESP32
@@ -35,7 +35,7 @@ ESP8266WebServer server(80);  // ESP8266 web
 #include <math.h>             // for rounding to Fahrenheit values
 #include <map>
 #include <cmath>              // For roundf function
-
+#include <HardwareSerial.h>
 #include <ArduinoOTA.h>   // for OTA
 #include <HeatPump.h>     // SwiCago library: https://github.com/SwiCago/HeatPump
 //#include <Ticker.h>     // for LED status (Using a Wemos D1-Mini)
@@ -86,7 +86,10 @@ StaticJsonDocument<JSON_OBJECT_SIZE(12)> rootInfo;
 //Web OTA
 int uploaderror = 0;
 
+HardwareSerial hpSerial(2); // Use UART2
+
 void setup() {
+  M5.begin(true, false, false); // Initialize M5Atom with Serial, without I2C, and with display
   // Start serial for debug before HVAC connect to serial
   Serial.begin(115200);
   // Serial.println(F("Starting Mitsubishi2MQTT"));
@@ -189,7 +192,9 @@ void setup() {
     // Allow Remote/Panel
     hp.enableExternalUpdate();
     hp.enableAutoUpdate();
-    hp.connect(&Serial);
+    hpSerial.begin(2400, SERIAL_8N1, 26, 32); // Baud rate: 9600, Mode: 8N1, RX: GPIO 26, TX: GPIO 32
+    hp.connect(&hpSerial);
+    // hp.connect(&Serial);
     heatpumpStatus currentStatus = hp.getStatus();
     heatpumpSettings currentSettings = hp.getSettings();
     rootInfo["roomTemperature"]     = convertCelsiusToLocalUnit(currentStatus.roomTemperature, useFahrenheit);
