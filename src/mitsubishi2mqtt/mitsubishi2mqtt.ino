@@ -13,7 +13,16 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+// M5 Atom Libraries
+//#ifdef M5ATOM
 #include <M5Atom.h>
+#include <FastLED.h> // Step 1: Include the FastLED library
+#define LED_PIN    27 // The pin where the NeoPixel is connected
+#define NUM_LEDS    1 // Number of LEDs in the strip (M5Atom Lite has one built-in LED)
+#define LED_TYPE    WS2812 // The type of LED
+#define COLOR_ORDER GRB // Color order
+CRGB leds[NUM_LEDS]; // Step 3: Create and Initialize the LED array
+
 #include "FS.h"               // SPIFFS for store config
 #ifdef ESP32
 #include <WiFi.h>             // WIFI for ESP32
@@ -90,6 +99,9 @@ HardwareSerial hpSerial(2); // Use UART2
 
 void setup() {
   M5.begin(true, false, false); // Initialize M5Atom with Serial, without I2C, and with display
+  // LED Setup
+    FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); // Initialize the LED
+  FastLED.setBrightness(50); // Optional: Set brightness (0-255)
   // Start serial for debug before HVAC connect to serial
   Serial.begin(115200);
   // Serial.println(F("Starting Mitsubishi2MQTT"));
@@ -1722,9 +1734,13 @@ bool connectWifi() {
     Serial.write('.');
     //Serial.print(WiFi.status());
     // wait 500ms, flashing the blue LED to indicate WiFi connecting...
-    digitalWrite(blueLedPin, LOW);
+    //digitalWrite(blueLedPin, LOW);
+     leds[0] = CRGB::Black; // Set the first LED to red
+     FastLED.show(); // Update the LED(s)
     delay(250);
-    digitalWrite(blueLedPin, HIGH);
+    //digitalWrite(blueLedPin, HIGH);
+     leds[0] = CRGB::Red; // Set the first LED to red
+     FastLED.show(); // Update the LED(s)
     delay(250);
   }
   if (WiFi.status() != WL_CONNECTED) {
@@ -1746,7 +1762,9 @@ bool connectWifi() {
   // Serial.println(WiFi.localIP());
   //ticker.detach(); // Stop blinking the LED because now we are connected:)
   //keep LED off (For Wemos D1-Mini)
-  digitalWrite(blueLedPin, HIGH);
+  leds[0] = CRGB::Blue; // Set the first LED to red
+  FastLED.show(); // Update the LED(s)
+  // digitalWrite(blueLedPin, HIGH);
   return true;
 }
 
@@ -1864,7 +1882,6 @@ bool checkLogin() {
 void loop() {
   server.handleClient();
   ArduinoOTA.handle();
-
   //reset board to attempt to connect to wifi again if in ap mode or wifi dropped out and time limit passed
   if (WiFi.getMode() == WIFI_STA and WiFi.status() == WL_CONNECTED) {
 	  wifi_timeout = millis() + WIFI_RETRY_INTERVAL_MS;
