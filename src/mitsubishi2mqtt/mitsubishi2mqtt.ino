@@ -18,7 +18,7 @@
 #include <M5Atom.h>
 #include <FastLED.h> // Step 1: Include the FastLED library
 #define LED_PIN    27 // The pin where the NeoPixel is connected
-#define NUM_LEDS    1 // Number of LEDs in the strip (M5Atom Lite has one built-in LED)
+// #define NUM_LEDS    1 // Number of LEDs in the strip (M5Atom Lite has one built-in LED)
 #define LED_TYPE    WS2812 // The type of LED
 #define COLOR_ORDER GRB // Color order
 CRGB leds[NUM_LEDS]; // Step 3: Create and Initialize the LED array
