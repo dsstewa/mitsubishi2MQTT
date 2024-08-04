@@ -98,10 +98,10 @@ int uploaderror = 0;
 HardwareSerial hpSerial(2); // Use UART2
 
 void setup() {
-  M5.begin(true, false, false); // Initialize M5Atom with Serial, without I2C, and with display
+  M5.begin(true, false, false); // Initialize M5Atom with Serial, without I2C, and with out display
   // LED Setup
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); // Initialize the LED
-  FastLED.setBrightness(50); // Optional: Set brightness (0-255)
+  FastLED.setBrightness(10); // Optional: Set brightness (0-255)
   // Start serial for debug before HVAC connect to serial
   Serial.begin(115200);
   // Serial.println(F("Starting Mitsubishi2MQTT"));
