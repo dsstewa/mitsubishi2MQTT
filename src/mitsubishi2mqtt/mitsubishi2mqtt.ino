@@ -95,12 +95,12 @@ StaticJsonDocument<JSON_OBJECT_SIZE(12)> rootInfo;
 //Web OTA
 int uploaderror = 0;
 
-HardwareSerial hpSerial(2); // Use UART2
+HardwareSerial hpSerial(2); // Use UART2 for M5 Atom
 
 void setup() {
   M5.begin(true, false, false); // Initialize M5Atom with Serial, without I2C, and with out display
   // LED Setup
-    FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); // Initialize the LED
+  FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS); // Initialize the LED
   FastLED.setBrightness(10); // Optional: Set brightness (0-255)
   // Start serial for debug before HVAC connect to serial
   Serial.begin(115200);
